@@ -3,12 +3,14 @@ package com.example.rpcproject.data
 data class Contact(
     val firstName: String,
     val lastName: String,
-    val number: String = "",
+    private val number: String = "",
     val numbers: MutableList<String> = mutableListOf()
 ) {
     var numberOfReads: Int = 0
+    var fullName = ""
 
     init {
+        fullName = "$firstName $lastName"
         if (number.isNotBlank()) numbers.add(number)
     }
 
@@ -21,5 +23,9 @@ data class Contact(
 
     fun incrementGet() {
         numberOfReads++
+    }
+
+    override fun toString(): String {
+        return fullName
     }
 }

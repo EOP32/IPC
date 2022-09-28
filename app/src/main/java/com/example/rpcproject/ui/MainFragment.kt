@@ -22,6 +22,7 @@ import com.example.rpcproject.R
 import com.example.rpcproject.data.Contact
 import com.example.rpcproject.data.Phonebook
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,7 +52,6 @@ class MainFragment : Fragment() {
         }
 
         loadContacts()
-        Log.d("TAG_MAIN", "${Phonebook.getAllContactsInString()}")
 
         view.findViewById<FloatingActionButton>(R.id.main_add).setOnClickListener {
             findNavController().navigate(R.id.action_global_addFragment)
@@ -63,6 +63,10 @@ class MainFragment : Fragment() {
 
         view.findViewById<Button>(R.id.main_search_button).setOnClickListener {
             findContacts()
+        }
+
+        view.findViewById<FloatingActionButton>(R.id.main_duplicate).setOnClickListener {
+            mergeContacts()
         }
 
         requireActivity()
@@ -79,6 +83,24 @@ class MainFragment : Fragment() {
                     }
                 }
             })
+    }
+
+    private fun mergeContacts() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch(Dispatchers.Default) {
+                val result = Phonebook.merge()
+
+                withContext(Dispatchers.Main) {
+                    mainAdapter.setContacts(Phonebook.contacts)
+
+                    if (result == 0) {
+                        Toast.makeText(requireContext(), "No duplicates found", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Snackbar.make(requireView(), "$result duplicates combined", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun findContacts() {
