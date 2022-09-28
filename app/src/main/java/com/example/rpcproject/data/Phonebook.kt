@@ -3,6 +3,7 @@ package com.example.rpcproject.data
 object Phonebook {
     val contacts: MutableList<Contact> = mutableListOf(
         Contact("Adam", "Adam", "11111"),
+        Contact("Adam", "Adam", "12345"),
         Contact("Adam", "Adam", "22222"),
         Contact("Eva", "Eva", "34555"),
         Contact("Eva", "Adam", "12355"),
@@ -69,11 +70,16 @@ object Phonebook {
 
     private fun helpMerge(list: List<Contact>): Contact {
         val contact = list[0]
+        var counter = 0
 
         for (element in list) {
+            if (counter != 0) {
+                contact.incrementGetBy(element.numberOfReads)
+            }
             for (num in element.numbers) {
                 contact.addNumber(num)
             }
+            counter++
         }
         return contact
     }

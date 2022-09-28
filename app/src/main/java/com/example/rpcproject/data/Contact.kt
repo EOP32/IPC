@@ -25,6 +25,10 @@ data class Contact(
         numberOfReads++
     }
 
+    fun incrementGetBy(num: Int) {
+        numberOfReads += num
+    }
+
     override fun toString(): String {
         return fullName
     }
